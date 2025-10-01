@@ -10,7 +10,8 @@ docker rm pg
 # 3. Посмотреть содержимое каталога
 ls /home/vasa/data
 
-# 4. Перенести каталог
+# 4. Создать директорию, если не существует, и перенести каталог
+mkdir -p /home/vasa/newdir
 mv /home/vasa/data /home/vasa/newdir/data
 
 # 5. Снова запустить контейнер с новым путем
