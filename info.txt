@@ -1,0 +1,44 @@
+127.0.0.1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_default_ipv4": {
+            "address": "10.0.2.15",
+            "alias": "enp0s1",
+            "broadcast": "",
+            "gateway": "10.0.2.2",
+            "interface": "enp0s1",
+            "macaddress": "e6:93:be:cc:6f:0b",
+            "mtu": 1500,
+            "netmask": "255.255.255.0",
+            "network": "10.0.2.0",
+            "prefix": "24",
+            "type": "ether"
+        },
+        "ansible_distribution": "Ubuntu",
+        "ansible_distribution_version": "24.04",
+        "ansible_env": {
+            "DBUS_SESSION_BUS_ADDRESS": "unix:path=/run/user/1000/bus",
+            "HOME": "/home/web-og",
+            "LANG": "en_US.UTF-8",
+            "LC_CTYPE": "C.UTF-8",
+            "LOGNAME": "web-og",
+            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+            "PWD": "/home/web-og",
+            "SHELL": "/bin/bash",
+            "SHLVL": "0",
+            "SSH_CLIENT": "10.0.2.2 57575 22",
+            "SSH_CONNECTION": "10.0.2.2 57575 10.0.2.15 22",
+            "SSH_TTY": "/dev/pts/0",
+            "TERM": "xterm-256color",
+            "USER": "web-og",
+            "XDG_RUNTIME_DIR": "/run/user/1000",
+            "XDG_SESSION_CLASS": "user",
+            "XDG_SESSION_ID": "44",
+            "XDG_SESSION_TYPE": "tty",
+            "_": "/bin/sh"
+        },
+        "ansible_hostname": "server-demo",
+        "ansible_os_family": "Debian",
+        "discovered_interpreter_python": "/usr/bin/python3.12"
+    },
+    "changed": false
+}
