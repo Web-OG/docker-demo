@@ -1,0 +1,83 @@
+---
+- name: Ensure docker group exists
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Create users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "Managed by Ansible"
+    create_home: true
+    shell: /bin/bash
+    groups: docker
+    append: true
+    password: "{{ item.password | password_hash('sha512', item.name) }}"
+    state: present
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0700'
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Generate SSH keypairs (skip if exist)
+  ansible.builtin.openssh_keypair:
+    path: "/home/{{ item.name }}/.ssh/id_ed25519"
+    type: ed25519
+    force: false
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0600'
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: keypair_results
+
+- name: Install public keys into authorized_keys
+  ansible.builtin.authorized_key:
+    user: "{{ item.item.name }}"
+    key: "{{ item.public_key }}"
+    state: present
+  loop: "{{ keypair_results.results }}"
+
+- name: Ensure private key permission and ownership
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ssh/id_ed25519"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0600'
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+# File: roles/user_setup/defaults/main.yml
+---
+# default empty; users are provided via vars_files (vault)
+users: []
+
+# File: create_users.yml  (playbook)
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vault.yml   # <-- encrypt this file with ansible-vault
+  roles:
+    - role: user_setup
+
+# File: vault.yml  (example structure — MUST be encrypted with ansible-vault)
+---
+# Encrypt this file: ansible-vault encrypt vault.yml
+users:
+  - name: alice
+    password: secret_password_alice
+  - name: bob
+    password: secret_password_bob
